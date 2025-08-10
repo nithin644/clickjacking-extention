@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Clickjack Alert (Auto Popup)",
+  "version": "1.2",
+  "description": "Automatically notifies and shows popup if the visited site appears vulnerable to clickjacking.",
+  "permissions": [
+    "notifications",
+    "storage",
+    "scripting",
+    "tabs",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icon48.png"
+    }
+  },
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

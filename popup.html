@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Clickjack Status</title>
+  <style>
+    html,body {
+      margin: 0;
+      padding: 0;
+      width: 340px;
+      height: 220px;
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      color: #f5f6fa;
+      font-family: 'Segoe UI', 'Roboto', Arial, Helvetica, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #container {
+      text-align: center;
+      padding: 18px 24px;
+      background: rgba(34, 40, 49, 0.92);
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      border: 3px solid;
+      border-image: linear-gradient(135deg, #ff3b30, #27ae60, #2980b9, #f1c40f) 1;
+    }
+    .vulnerable {
+      color: #ff3b30;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 8px rgba(255,59,48,0.12);
+    }
+    .safe {
+      color: #27ae60;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 8px rgba(39,174,96,0.12);
+    }
+    .unknown {
+      color: #b2bec3;
+      font-size: 15px;
+      font-style: italic;
+    }
+    .host {
+      color: #dfe6e9;
+      font-size: 13px;
+      margin-top: 14px;
+      word-break: break-all;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+    }
+    .hint {
+      margin-top: 16px;
+      color: #636e72;
+      font-size: 13px;
+      font-style: italic;
+      letter-spacing: 0.2px;
+    }
+    #status {
+      margin-bottom: 8px;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="status" class="unknown">Checking...</div>
+    <div id="host" class="host"></div>
+    <div id="hint" class="hint">If no data yet, reload the page.</div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
