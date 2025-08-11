@@ -18,28 +18,43 @@
       const xfo = resp.headers.get("x-frame-options");
       const csp = resp.headers.get("content-security-policy");
 
-      // Simple logic:
-      // - If X-Frame-Options exists => protected
-      // - If CSP contains frame-ancestors with 'none' or non-wildcard => protected
-      // Otherwise => likely vulnerable
+      // Improved logic:
+      // - X-Frame-Options: DENY or SAMEORIGIN => protected
+      // - CSP: frame-ancestors 'none' or specific domains (not *) => protected
+      // - Otherwise => unknown if no headers, vulnerable if explicitly allowed
       if (xfo) {
-        vulnerable = false;
+        const xfoVal = xfo.trim().toUpperCase();
+        if (xfoVal === "DENY" || xfoVal === "SAMEORIGIN") {
+          vulnerable = false;
+        } else {
+          vulnerable = true;
+        }
       } else if (csp) {
         const lc = csp.toLowerCase();
         if (lc.includes("frame-ancestors")) {
-          // treat presence of frame-ancestors as protection (unless it's wildcard)
-          // crude parse:
+          // Parse frame-ancestors directive
           const directive = lc.split(";").map(s=>s.trim()).find(d => d.startsWith("frame-ancestors"));
-          if (directive && !directive.includes("*")) {
-            vulnerable = false;
+          if (directive) {
+            // Get values after frame-ancestors
+            const values = directive.replace("frame-ancestors","").trim().split(/\s+/);
+            if (values.includes("'none'")) {
+              vulnerable = false;
+            } else if (values.includes("*")) {
+              vulnerable = true;
+            } else if (values.length > 0) {
+              // Specific domains listed, treat as protected
+              vulnerable = false;
+            } else {
+              vulnerable = null;
+            }
           } else {
-            vulnerable = true;
+            vulnerable = null;
           }
         } else {
           vulnerable = true;
         }
       } else {
-        vulnerable = true;
+        vulnerable = null;
       }
     } catch (err) {
       // If HEAD failed (CORS or server issues) mark as unknown (null)
